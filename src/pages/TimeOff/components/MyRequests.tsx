@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { RequestTimeoffPayload } from '@/configs/api/payload';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import usePagination from '@/hooks/use-pagination';
@@ -50,7 +49,7 @@ import {
 import dayjs from 'dayjs';
 import { DataTable, DataTableColumn } from 'mantine-datatable';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { BalanceHistory, ComponentRef } from './BalanceHistory';
+import { ComponentRef } from './BalanceHistory';
 
 export const MyRequests = () => {
   const theme = useMantineTheme();
@@ -341,10 +340,8 @@ export const ModalAddRequest = ({ close }: Props) => {
   const [_dateTo, setDateTo] = useState<DateValue>();
   const [_start, setStart] = useState(0);
   const [_end, setEnd] = useState(0);
-  const [previewImage, setPreviewImage] = useState<FileWithPath>();
-  const [isLoadingUpload, url, handleUploadImageOnFirebase] =
-    useUploadFirebase();
-
+  const [, setPreviewImage] = useState<FileWithPath>();
+  const [isLoadingUpload, , handleUploadImageOnFirebase] = useUploadFirebase();
   const form = useForm<RequestTimeoffPayload>({
     initialValues: {
       type: '',

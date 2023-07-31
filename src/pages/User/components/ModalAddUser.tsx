@@ -40,9 +40,7 @@ export const ModalAddUser = ({ closeModal }: Props) => {
     dispatch(RoleActions.getAllRole());
   }, [dispatch]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isLoadingUpload, url, handleUploadImageOnFirebase] =
-    useUploadFirebase();
+  const [isLoadingUpload, , handleUploadImageOnFirebase] = useUploadFirebase();
 
   const { roles } = useAppSelector((state: RootState) => state.role);
   console.log(roles);

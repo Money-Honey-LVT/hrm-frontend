@@ -27,7 +27,6 @@ import {
   addDays,
   addWeeks,
   format,
-  getWeek,
   isSameDay,
   lastDayOfWeek,
   startOfWeek,
@@ -46,17 +45,16 @@ export const UpcomingEvents = () => {
   const { events } = useAppSelector((state: RootState) => state.event);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentWeek, setCurrentWeek] = useState(getWeek(currentMonth));
+  // const [currentWeek, setCurrentWeek] = useState(getWeek(currentMonth));
 
   const changeWeekHandle = (btnType: string) => {
     if (btnType === 'prev') {
       setCurrentMonth(subWeeks(currentMonth, 1));
-      setCurrentWeek(getWeek(subWeeks(currentMonth, 1)));
+      // setCurrentWeek(getWeek(subWeeks(currentMonth, 1)));
     }
     if (btnType === 'next') {
       setCurrentMonth(addWeeks(currentMonth, 1));
-      setCurrentWeek(getWeek(addWeeks(currentMonth, 1)));
+      // setCurrentWeek(getWeek(addWeeks(currentMonth, 1)));
     }
   };
 
