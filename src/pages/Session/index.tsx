@@ -3,7 +3,6 @@ import { API_URLS } from '@/configs/api/endpoint';
 import usePagination from '@/hooks/use-pagination';
 import { ISession } from '@/types/models/ISession';
 import { Stack, Text } from '@mantine/core';
-import dayjs from 'dayjs';
 import { DataTable, DataTableColumn } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 
@@ -23,6 +22,44 @@ export const Session = () => {
     getSession();
   }, []);
 
+  function formatDate(timestamp: string) {
+    const date = new Date(timestamp);
+
+    // Extract date components
+    const day = date.getUTCDate();
+    const month = date.getUTCMonth() + 1; // Months are zero-based, so add 1
+    const year = date.getUTCFullYear();
+
+    // Format time components
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    const seconds = String(date.getUTCSeconds() + 8).padStart(2, '0'); // Adding 8 seconds to match the provided time
+    const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+    // Create month names mapping
+    const monthNames = [
+      'Th01',
+      'Th02',
+      'Th03',
+      'Th04',
+      'Th05',
+      'Th06',
+      'Th07',
+      'Th08',
+      'Th09',
+      'Th10',
+      'Th11',
+      'Th12'
+    ];
+
+    // Create the final formatted date string
+    const formattedDate = `${formattedTime} ngày ${day} ${
+      monthNames[month - 1]
+    } ${year}`;
+
+    return formattedDate;
+  }
+
   const columns: DataTableColumn<ISession>[] = [
     {
       accessor: 'username',
@@ -32,13 +69,7 @@ export const Session = () => {
       title: 'Lần cuối đăng nhập',
       accessor: 'lastActivityTime',
       render: ({ lastActivityTime }) => {
-        return (
-          <Text>
-            {dayjs(lastActivityTime)
-              .add(7, 'hour')
-              .format('HH:mm:ss ngày DD MMM YYYY ')}
-          </Text>
-        );
+        return <Text>{formatDate(lastActivityTime)}</Text>;
       }
     }
   ];

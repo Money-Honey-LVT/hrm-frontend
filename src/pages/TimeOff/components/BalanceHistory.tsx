@@ -53,12 +53,13 @@ export const BalanceHistory = forwardRef<ComponentRef>(() => {
     );
   }, [dispatch]);
 
-  const triggerRef = useRef(getBalanceHistory());
+  const triggerRef = useRef(() => getBalanceHistory());
   useImperativeHandle(undefined, () => ({
     triggerFunction: triggerRef
   }));
 
   useEffect(() => {
+    console.log('ád');
     getBalanceHistory();
   }, [getBalanceHistory]);
 
