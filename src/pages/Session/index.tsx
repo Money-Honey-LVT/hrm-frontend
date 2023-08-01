@@ -34,7 +34,9 @@ export const Session = () => {
       render: ({ lastActivityTime }) => {
         return (
           <Text>
-            {dayjs(lastActivityTime).format('HH:mm:ss ngày DD MMM YYYY ')}
+            {dayjs(lastActivityTime)
+              .add(7, 'hour')
+              .format('HH:mm:ss ngày DD MMM YYYY ')}
           </Text>
         );
       }
