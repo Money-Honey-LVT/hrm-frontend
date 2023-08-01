@@ -44,6 +44,7 @@ export const BalanceHistory = forwardRef<ComponentRef>(() => {
   const [_balanceHistory, setBalanceHistory] = useState<IBalance[]>();
 
   const getBalanceHistory = useCallback(() => {
+    console.log('ádasd');
     dispatch(
       TimeoffActions.getBalanceHistory({
         onSuccess: (data: IBalance[]) => {
@@ -53,12 +54,13 @@ export const BalanceHistory = forwardRef<ComponentRef>(() => {
     );
   }, [dispatch]);
 
-  const triggerRef = useRef(getBalanceHistory());
+  const triggerRef = useRef(() => getBalanceHistory());
   useImperativeHandle(undefined, () => ({
     triggerFunction: triggerRef
   }));
 
   useEffect(() => {
+    console.log('ád');
     getBalanceHistory();
   }, [getBalanceHistory]);
 
