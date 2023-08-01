@@ -25,7 +25,7 @@ export const Session = () => {
 
   const columns: DataTableColumn<ISession>[] = [
     {
-      accessor: 'usernames',
+      accessor: 'username',
       title: 'Tên tài khoản'
     },
     {
