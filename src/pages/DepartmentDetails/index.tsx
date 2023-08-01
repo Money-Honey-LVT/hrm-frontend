@@ -78,8 +78,7 @@ export const DepartmentDetails = () => {
   const form = useForm<UpdateDepartmentPayload>({
     validate: {
       name: isNotEmpty('Không được để trống'),
-      description: isNotEmpty('Không được để trống'),
-      parentId: isNotEmpty('Không được để trống')
+      description: isNotEmpty('Không được để trống')
     }
   });
 
