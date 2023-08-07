@@ -30,3 +30,16 @@ export const removeVietnameseandLowercase = (word: string | undefined) => {
     .replace(/đ/g, 'd')
     .replace(/Đ/g, 'D');
 };
+
+export const validatePassword = (password: string | undefined) => {
+  if (!password) return false;
+  const passwordPattern =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return passwordPattern.test(password);
+};
+
+export const validateEmail = (email: string | undefined) => {
+  if (!email) return false;
+  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  return emailPattern.test(email);
+};

@@ -8,6 +8,7 @@ import { useAppDispatch } from '@/hooks/redux';
 import { NewsActions } from '@/redux/reducers/news/news.action';
 import { TimeoffActions } from '@/redux/reducers/timeoff/timeoff.action';
 import { IUser } from '@/types/models/IUser';
+import { validatePassword } from '@/utils/helpers';
 import { RESOURCES, SCOPES, isGrantedPermission } from '@/utils/permissions';
 import {
   Anchor,
@@ -128,6 +129,12 @@ const User = ({ profile }: UserProps) => {
   };
   const [opened, { close, open }] = useDisclosure();
   const [_newPwd, setNewPwd] = useState('');
+
+  const handleChangePwd = () => {
+    changePwd({ password: _newPwd });
+    close();
+  };
+
   return (
     <Box
       sx={{
@@ -145,18 +152,17 @@ const User = ({ profile }: UserProps) => {
             onChange={(e) => setNewPwd(e.currentTarget.value)}
             label="Mật khẩu mới"
           />
+          {validatePassword(_newPwd) ? null : (
+            <Text color="red" fz={'xs'} mt={0}>
+              Mật khẩu có độ dài tối thiếu 8 ký tự, chứa ít nhất 1 chữ số, 1 ký
+              tự viết hoa và 1 ký tự đặc biệt
+            </Text>
+          )}
           <Group position="right">
             <Button variant="outline" onClick={() => close()}>
               Huỷ
             </Button>
-            <Button
-              onClick={() => {
-                changePwd({ password: _newPwd });
-                close();
-              }}
-            >
-              Cập nhật
-            </Button>
+            <Button onClick={handleChangePwd}>Cập nhật</Button>
           </Group>
         </Stack>
       </Modal>
