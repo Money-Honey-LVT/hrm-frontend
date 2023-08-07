@@ -21,6 +21,7 @@ import { useState } from 'react';
 import { ModalSelectDepartment } from './ModalSelectDepartment';
 import { useNavigate } from 'react-router-dom';
 import { ROUTER } from '@/configs/router';
+import { NotiType, renderNotification } from '@/utils/notifications';
 
 export const CreateNewsPage = () => {
   const navigate = useNavigate();
@@ -35,8 +36,7 @@ export const CreateNewsPage = () => {
       content: ''
     },
     validate: {
-      title: isNotEmpty('Tiêu đề không được bỏ trống'),
-      content: isNotEmpty('Nội dung không được bỏ trống')
+      title: isNotEmpty('Tiêu đề không được bỏ trống')
     },
     transformValues: (values) => ({
       ...values,
@@ -80,24 +80,33 @@ export const CreateNewsPage = () => {
   const [openedSelectDepartment, { open, close }] = useDisclosure();
 
   const handleSubmit = (values: CreateNewsPayload, status: INewStatus) => {
-    dispatch(
-      NewsActions.createNews(
-        { ...values, status: status },
-        {
-          onSuccess: () => {
-            dispatch(NewsActions.getAllNews());
-            navigate(ROUTER.NEWS);
+    if (values.content) {
+      dispatch(
+        NewsActions.createNews(
+          { ...values, status: status },
+          {
+            onSuccess: () => {
+              dispatch(NewsActions.getAllNews());
+              navigate(ROUTER.NEWS);
+            }
           }
-        }
-      )
-    );
+        )
+      );
+    } else {
+      renderNotification(
+        'Nội dung của thông báo không được để trống',
+        NotiType.INFO
+      );
+    }
   };
 
   const handleChangePublic = (value: string | null) => {
     if (value !== 'isPublic') {
       setIsPublic(false);
       open();
+      return;
     }
+    setIsPublic(true);
   };
 
   return (
@@ -111,6 +120,7 @@ export const CreateNewsPage = () => {
         <TextInput
           label="Tiêu đề"
           placeholder="Tiêu đề"
+          required
           {...form.getInputProps('title')}
         />
         <Checkbox
@@ -120,7 +130,7 @@ export const CreateNewsPage = () => {
         />
         <Stack spacing={2}>
           <Text fw={600} fz={'sm'}>
-            Nội dung
+            Nội dung <span style={{ color: 'red' }}>*</span>
           </Text>
           <CKEditor
             editor={ClassicEditor}

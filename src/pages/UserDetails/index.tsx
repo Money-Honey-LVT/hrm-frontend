@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { RootState } from '@/redux/reducers';
 import { UserActions } from '@/redux/reducers/user/user.action';
 import { IUser, IUserGender, IUserGenderDict } from '@/types/models/IUser';
+import { validateEmail } from '@/utils/helpers';
 import { Modals } from '@/utils/modals';
 import { NotiType, renderNotification } from '@/utils/notifications';
 import { RESOURCES, SCOPES, isGrantedPermission } from '@/utils/permissions';
@@ -24,7 +25,7 @@ import {
   TextInput
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { isEmail, isNotEmpty, useForm } from '@mantine/form';
+import { isNotEmpty, useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { IconEdit } from '@tabler/icons-react';
 import dayjs from 'dayjs';
@@ -47,7 +48,14 @@ export const UserDetails = () => {
   const form = useForm<ChangeProfilePayload>({
     validate: {
       fullName: isNotEmpty('Họ tên không được bỏ trống'),
-      email: isEmail('Email không đúng định dạng'),
+      email: (value) => {
+        if (!value) {
+          return 'Email không được để trống';
+        }
+        if (!validateEmail(value)) {
+          return 'Email chưa đúng định dạng';
+        }
+      },
       phoneNumber: isNotEmpty('Số điện thoại không được bỏ trống'),
       dayOfBirth: isNotEmpty('Ngày sinh không được bỏ trống'),
       roleIds: isNotEmpty('Chưa lựa chọn vai trò')
@@ -92,6 +100,9 @@ export const UserDetails = () => {
   );
 
   const handleCancel = () => {
+    if (_user) {
+      form.setValues(_user);
+    }
     setIsEditing(false);
   };
 
@@ -124,20 +135,16 @@ export const UserDetails = () => {
   };
 
   const handleSubmit = (values: ChangeProfilePayload) => {
-    if (!_isEditing) {
-      setIsEditing(true);
+    if (isDirty()) {
+      dispatch(
+        UserActions.updateUser(values, _user?.id, {
+          onSuccess: () => dispatch(UserActions.getAllUser())
+        })
+      );
     } else {
-      if (isDirty()) {
-        dispatch(
-          UserActions.updateUser(values, _user?.id, {
-            onSuccess: () => dispatch(UserActions.getAllUser())
-          })
-        );
-      } else {
-        renderNotification('Bạn chưa thay đổi thông tin', NotiType.ERROR);
-      }
-      setIsEditing(false);
+      renderNotification('Bạn chưa thay đổi thông tin', NotiType.ERROR);
     }
+    setIsEditing(false);
   };
 
   const [opened, { close, open }] = useDisclosure();
@@ -168,7 +175,16 @@ export const UserDetails = () => {
             ) : null}
             <Button
               leftIcon={<IconEdit size={'1rem'} />}
-              type={'submit'}
+              type={!_isEditing ? 'submit' : 'button'}
+              onClick={() => {
+                if (!_isEditing) {
+                  console.log('Editing');
+                  setIsEditing(true);
+                } else {
+                  console.log('Submit');
+                  setIsEditing(false);
+                }
+              }}
               form={`form-update-profile-${_user?.id}`}
             >
               {_isEditing ? 'Lưu thông tin' : 'Sửa thông tin'}

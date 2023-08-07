@@ -131,6 +131,7 @@ export const UpdateNewsPage = () => {
     if (value !== 'isPublic') {
       setIsPublic(false);
       open();
+      return;
     }
     setIsPublic(true);
   };

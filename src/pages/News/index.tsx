@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { CardNews } from './components/CardNews';
 import { useAuthContext } from '@/hooks/context';
 import { RESOURCES, SCOPES, isGrantedPermission } from '@/utils/permissions';
+import { removeVietnameseandLowercase } from '@/utils/helpers';
 
 export const News = () => {
   const { state } = useAuthContext();
@@ -41,7 +42,26 @@ export const News = () => {
         if (newsItem.status === _statusFilter) {
           if (debounceQuery !== '') {
             if (
-              newsItem.title.toLowerCase().includes(debounceQuery.toLowerCase())
+              removeVietnameseandLowercase(newsItem.title).includes(
+                removeVietnameseandLowercase(debounceQuery)
+              ) ||
+              removeVietnameseandLowercase(newsItem.content).includes(
+                removeVietnameseandLowercase(debounceQuery)
+              )
+            ) {
+              return true;
+            } else return false;
+          }
+          return true;
+        } else if (_statusFilter === INewStatus.ALL) {
+          if (debounceQuery !== '') {
+            if (
+              removeVietnameseandLowercase(newsItem.title).includes(
+                removeVietnameseandLowercase(debounceQuery)
+              ) ||
+              removeVietnameseandLowercase(newsItem.content).includes(
+                removeVietnameseandLowercase(debounceQuery)
+              )
             ) {
               return true;
             } else return false;
@@ -70,7 +90,7 @@ export const News = () => {
         <Group>
           <Input
             icon={<IconSearch size={'1rem'} />}
-            placeholder="Tìm kiếm tiêu đề "
+            placeholder="Tìm kiếm tiêu đề hoặc nội dung"
             onChange={(e) => setQuery(e.currentTarget.value)}
             miw={'250px'}
           />

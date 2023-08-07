@@ -4,6 +4,7 @@ import { RootState } from '@/redux/reducers';
 import { RoleActions } from '@/redux/reducers/role/role.action';
 import { UserActions } from '@/redux/reducers/user/user.action';
 import { IUser, IUserStatus, IUserStatusDict } from '@/types/models/IUser';
+import { removeVietnameseandLowercase } from '@/utils/helpers';
 import { Badge, Button, Group, Input, Stack, Text } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { DataTable, DataTableColumn } from 'mantine-datatable';
@@ -30,8 +31,12 @@ export const ModalAddUserIntoRole = ({
       users.filter((user) => {
         if (debounceQuery !== '') {
           if (
-            user.fullName.includes(debounceQuery) ||
-            user.employeeCode.includes(debounceQuery)
+            removeVietnameseandLowercase(user.fullName).includes(
+              removeVietnameseandLowercase(debounceQuery)
+            ) ||
+            removeVietnameseandLowercase(user.employeeCode).includes(
+              removeVietnameseandLowercase(debounceQuery)
+            )
           ) {
             return true;
           }
