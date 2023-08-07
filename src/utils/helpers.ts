@@ -20,3 +20,13 @@ export const formatPhonenumber = (phone: string | undefined) => {
   if (!phone) return '';
   return _.replace(phone, /(\d{4})(\d{3})(\d{3})/, '$1.$2.$3');
 };
+
+export const removeVietnameseandLowercase = (word: string | undefined) => {
+  if (!word) return '';
+  return word
+    .toLocaleLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D');
+};

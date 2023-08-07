@@ -72,7 +72,6 @@ export const Profile = () => {
     updateProfile({ ...form.values, avatarFileId: url }, profile?.id, {
       onSuccess: () => {
         form.values.avatarFileId = url;
-
         getProfile();
       },
       onError: () => form.reset()

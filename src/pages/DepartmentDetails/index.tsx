@@ -104,7 +104,9 @@ export const DepartmentDetails = () => {
   }, [_department]);
 
   const handleCancel = () => {
-    // form.reset();
+    if (_department) {
+      form.setValues(_department);
+    }
     setIsEditing(false);
   };
 
@@ -124,29 +126,25 @@ export const DepartmentDetails = () => {
   };
 
   const handleSubmit = (values: UpdateDepartmentPayload) => {
-    if (!_isEditing) {
-      setIsEditing(true);
+    if (isDirtyForm()) {
+      dispatch(
+        DepartmentActions.updateDepartment(values, _department?.id, {
+          onSuccess: () => {
+            dispatch(
+              DepartmentActions.getDetailsDepartment(id, {
+                onSuccess: (data: IDepartment) => {
+                  setDepartment(data);
+                  getAllDepartments();
+                }
+              })
+            );
+          }
+        })
+      );
     } else {
-      if (isDirtyForm()) {
-        dispatch(
-          DepartmentActions.updateDepartment(values, _department?.id, {
-            onSuccess: () => {
-              dispatch(
-                DepartmentActions.getDetailsDepartment(id, {
-                  onSuccess: (data: IDepartment) => {
-                    setDepartment(data);
-                    getAllDepartments();
-                  }
-                })
-              );
-            }
-          })
-        );
-      } else {
-        renderNotification('Bạn chưa thay đổi thông tin', NotiType.ERROR);
-      }
-      setIsEditing(false);
+      renderNotification('Bạn chưa thay đổi thông tin', NotiType.ERROR);
     }
+    setIsEditing(false);
   };
 
   const {
@@ -241,7 +239,16 @@ export const DepartmentDetails = () => {
             ) : null}
             <Button
               leftIcon={<IconEdit size={'1rem'} />}
-              type={'submit'}
+              type={!_isEditing ? 'submit' : 'button'}
+              onClick={() => {
+                if (!_isEditing) {
+                  console.log('Editing');
+                  setIsEditing(true);
+                } else {
+                  console.log('Submit');
+                  setIsEditing(false);
+                }
+              }}
               form={`update-department-form-${_department?.id}`}
             >
               {_isEditing ? 'Lưu thông tin' : 'Sửa thông tin'}
@@ -254,7 +261,10 @@ export const DepartmentDetails = () => {
       ) : (
         <form
           id={`update-department-form-${_department?.id}`}
-          onSubmit={form.onSubmit((values) => handleSubmit(values))}
+          onSubmit={form.onSubmit(
+            (values) => handleSubmit(values),
+            (err) => console.log(err)
+          )}
         >
           <Grid gutter={'md'}>
             <Grid.Col span={4}>
