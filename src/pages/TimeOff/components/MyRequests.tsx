@@ -349,7 +349,6 @@ export const ModalAddRequest = ({ close, triggerBalanceHistory }: Props) => {
   const [_end, setEnd] = useState(0);
   const [, setPreviewImage] = useState<FileWithPath>();
   const [isLoadingUpload, , handleUploadImageOnFirebase] = useUploadFirebase();
-
   const form = useForm<RequestTimeoffPayload>({
     initialValues: {
       type: '',

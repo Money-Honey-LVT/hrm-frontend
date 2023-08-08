@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import CustomLoader from '@/components/custom/CustomLoader';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { RootState } from '@/redux/reducers';
@@ -47,7 +46,7 @@ export const CheckAttendance = () => {
 
   const theme = useMantineTheme();
 
-  const [_checkinDate, setCheckinDate] = useState<dayjs.Dayjs>();
+  // const [_checkinDate, setCheckinDate] = useState<dayjs.Dayjs>();
   const [_isCheckin, setIsCheckin] = useState(checkIfCheckInToday());
 
   useEffect(() => {

@@ -43,8 +43,7 @@ const OpenUploadModal = ({
   onClose,
   afterUpload
 }: OpenUploadModalProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [preview, setPreview] = useState<string>('');
+  const [, setPreview] = useState<string>('');
   const [file, setFile] = useState<FileWithPath | null>(null);
 
   const handleClose = () => {
@@ -65,9 +64,7 @@ const OpenUploadModal = ({
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isLoadingUpload, url, handleUploadImageOnFirebase] =
-    useUploadFirebase();
+  const [isLoadingUpload, , handleUploadImageOnFirebase] = useUploadFirebase();
 
   const handleUpload = () => {
     if (!file) return;
