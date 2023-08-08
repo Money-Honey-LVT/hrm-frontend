@@ -2,12 +2,11 @@ import { Col, Grid, Stack } from '@mantine/core';
 import { CheckAttendance } from './components/CheckAttendance';
 import { MyNews } from './components/MyNews';
 import { MyTimeOff } from './components/MyTimeoff';
-import { UpcomingEvents } from './components/UpcomingEvents';
 
 export const Home = () => {
   return (
     <Stack px={'xl'} spacing={30}>
-      <UpcomingEvents />
+      {/* <UpcomingEvents /> */}
       <Grid gutter={50}>
         <Col span={7}>
           <MyTimeOff />

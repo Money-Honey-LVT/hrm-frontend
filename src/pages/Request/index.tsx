@@ -88,8 +88,6 @@ export const Requests = () => {
     setAllRequest(filteredData);
   }, [allRequests, _startDate, _endDate, _requestType, _requestStatus]);
 
-  console.log(_allRequest);
-
   const handleChangeRequestStatus = (
     id: string | undefined,
     status: IRequestStatus
@@ -286,6 +284,7 @@ export const Requests = () => {
           rightSection={<IconCalendar size="0.9rem" color="blue" />}
           value={_endDate}
           onChange={setEndDate}
+          minDate={_startDate || new Date()}
         />
         <Select
           label="Loại"

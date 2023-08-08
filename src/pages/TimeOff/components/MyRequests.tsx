@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { RequestTimeoffPayload } from '@/configs/api/payload';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import usePagination from '@/hooks/use-pagination';
@@ -50,9 +49,12 @@ import {
 import dayjs from 'dayjs';
 import { DataTable, DataTableColumn } from 'mantine-datatable';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { BalanceHistory, ComponentRef } from './BalanceHistory';
 
-export const MyRequests = () => {
+export interface MyRequestsProps {
+  triggerBalanceHistory: () => void;
+}
+
+export const MyRequests = ({ triggerBalanceHistory }: MyRequestsProps) => {
   const theme = useMantineTheme();
   const dispatch = useAppDispatch();
   const { myRequests } = useAppSelector((state: RootState) => state.timeoff);
@@ -325,7 +327,10 @@ export const MyRequests = () => {
         onClose={close}
         size={'1000px'}
       >
-        <ModalAddRequest close={close} />
+        <ModalAddRequest
+          close={close}
+          triggerBalanceHistory={triggerBalanceHistory}
+        />
       </Modal>
     </>
   );
@@ -333,17 +338,17 @@ export const MyRequests = () => {
 
 interface Props {
   close: () => void;
+  triggerBalanceHistory: () => void;
 }
 
-export const ModalAddRequest = ({ close }: Props) => {
+export const ModalAddRequest = ({ close, triggerBalanceHistory }: Props) => {
   const [_isSingleDay, setIsSingleDay] = useState(true);
   const [_dateFrom, setDateFrom] = useState<DateValue>();
   const [_dateTo, setDateTo] = useState<DateValue>();
   const [_start, setStart] = useState(0);
   const [_end, setEnd] = useState(0);
-  const [previewImage, setPreviewImage] = useState<FileWithPath>();
-  const [isLoadingUpload, url, handleUploadImageOnFirebase] =
-    useUploadFirebase();
+  const [, setPreviewImage] = useState<FileWithPath>();
+  const [isLoadingUpload, , handleUploadImageOnFirebase] = useUploadFirebase();
 
   const form = useForm<RequestTimeoffPayload>({
     initialValues: {
@@ -486,7 +491,6 @@ export const ModalAddRequest = ({ close }: Props) => {
     );
   };
   const dispatch = useAppDispatch();
-  const componentRef = useRef<ComponentRef>(null);
 
   const handleSubmit = (values: RequestTimeoffPayload) => {
     dispatch(
@@ -496,9 +500,8 @@ export const ModalAddRequest = ({ close }: Props) => {
           onSuccess: () => {
             dispatch(TimeoffActions.getMyRequest());
             dispatch(TimeoffActions.getBalanceHistory());
-            if (componentRef && componentRef.current) {
-              componentRef.current.triggerFunction(); // Call the handleTrigger function in ComponentB
-            }
+            dispatch(TimeoffActions.getMyTimeoff());
+            triggerBalanceHistory();
             close();
           }
         }

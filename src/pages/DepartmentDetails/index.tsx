@@ -25,6 +25,7 @@ import {
 import { isNotEmpty, useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import {
+  IconChevronLeft,
   IconEdit,
   IconInfoCircle,
   IconLayoutGridRemove,
@@ -126,25 +127,34 @@ export const DepartmentDetails = () => {
   };
 
   const handleSubmit = (values: UpdateDepartmentPayload) => {
-    if (isDirtyForm()) {
-      dispatch(
-        DepartmentActions.updateDepartment(values, _department?.id, {
-          onSuccess: () => {
-            dispatch(
-              DepartmentActions.getDetailsDepartment(id, {
-                onSuccess: (data: IDepartment) => {
-                  setDepartment(data);
-                  getAllDepartments();
-                }
-              })
-            );
-          }
-        })
-      );
+    if (!_isEditing) {
+      console.log('Editing');
+      setIsEditing(true);
     } else {
-      renderNotification('Bạn chưa thay đổi thông tin', NotiType.ERROR);
+      if (isDirtyForm()) {
+        dispatch(
+          DepartmentActions.updateDepartment(values, _department?.id, {
+            onSuccess: () => {
+              dispatch(
+                DepartmentActions.getDetailsDepartment(id, {
+                  onSuccess: (data: IDepartment) => {
+                    setDepartment(data);
+                    getAllDepartments();
+                  }
+                })
+              );
+            },
+            onError: () => {
+              handleCancel();
+              setIsEditing(false);
+            }
+          })
+        );
+      } else {
+        renderNotification('Bạn chưa thay đổi thông tin', NotiType.ERROR);
+      }
+      setIsEditing(false);
     }
-    setIsEditing(false);
   };
 
   const {
@@ -227,9 +237,12 @@ export const DepartmentDetails = () => {
   return (
     <Stack>
       <Group position="apart">
-        <Text fw={600} size={'lg'}>
-          Thông tin phòng ban
-        </Text>
+        <Group spacing={'xs'}>
+          <IconChevronLeft onClick={() => navigate(-1)} cursor={'pointer'} />
+          <Text fw={600} size={'lg'}>
+            Thông tin phòng ban
+          </Text>
+        </Group>
         {isGrantedUpdatePermission && (
           <Group>
             {_isEditing ? (
@@ -239,16 +252,7 @@ export const DepartmentDetails = () => {
             ) : null}
             <Button
               leftIcon={<IconEdit size={'1rem'} />}
-              type={!_isEditing ? 'submit' : 'button'}
-              onClick={() => {
-                if (!_isEditing) {
-                  console.log('Editing');
-                  setIsEditing(true);
-                } else {
-                  console.log('Submit');
-                  setIsEditing(false);
-                }
-              }}
+              type={'submit'}
               form={`update-department-form-${_department?.id}`}
             >
               {_isEditing ? 'Lưu thông tin' : 'Sửa thông tin'}

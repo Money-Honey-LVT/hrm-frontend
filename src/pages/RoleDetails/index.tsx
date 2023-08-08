@@ -1,12 +1,14 @@
 import CustomLoader from '@/components/custom/CustomLoader';
 import { UpdateRolePayload } from '@/configs/api/payload';
 import { ROUTER } from '@/configs/router';
+import { useAuthContext } from '@/hooks/context';
 import { useAppDispatch } from '@/hooks/redux';
 import usePagination from '@/hooks/use-pagination';
 import { RoleActions } from '@/redux/reducers/role/role.action';
-import { IRole, IRoleStatus, IRoleStatusDict } from '@/types/models/IRole';
+import { IRole } from '@/types/models/IRole';
 import { IUser, IUserGenderDict, IUserStatusDict } from '@/types/models/IUser';
 import { NotiType, renderNotification } from '@/utils/notifications';
+import { RESOURCES, SCOPES, isGrantedPermission } from '@/utils/permissions';
 import {
   Badge,
   Button,
@@ -32,8 +34,7 @@ import { DataTable, DataTableColumn } from 'mantine-datatable';
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ModalAddUserIntoRole } from './components/ModalAddUserIntoRole';
-import { RESOURCES, SCOPES, isGrantedPermission } from '@/utils/permissions';
-import { useAuthContext } from '@/hooks/context';
+import { IconChevronLeft } from '@tabler/icons-react';
 
 export const RoleDetails = () => {
   const { state } = useAuthContext();
@@ -83,7 +84,9 @@ export const RoleDetails = () => {
   }, [_roleDetails]);
 
   const handleCancelUpdate = () => {
-    // form.reset();
+    if (_roleDetails) {
+      form.setValues(_roleDetails);
+    }
     setIsEditing(false);
   };
 
@@ -119,6 +122,10 @@ export const RoleDetails = () => {
                   }
                 })
               );
+            },
+            onError: () => {
+              handleCancelUpdate();
+              setIsEditing(false);
             }
           })
         );
@@ -213,9 +220,13 @@ export const RoleDetails = () => {
   return (
     <Stack>
       <Group position="apart" mb={'lg'}>
-        <Text fw={600} size={'lg'}>
-          Thông tin chi tiết vai trò
-        </Text>
+        <Group spacing={'xs'}>
+          <IconChevronLeft onClick={() => navigate(-1)} cursor={'pointer'} />
+          <Text fw={600} size={'lg'}>
+            Thông tin vai trò
+          </Text>
+        </Group>
+
         {isGrantedUpdatePermission && (
           <Group>
             {_isEditing ? (
@@ -262,23 +273,6 @@ export const RoleDetails = () => {
               )}
             </Col>
 
-            <Col span={3}>
-              {renderLabelandValue(
-                'Trạng thái hoạt động',
-                <Badge
-                  w={'fit-content'}
-                  color={
-                    IRoleStatusDict[_roleDetails?.status || IRoleStatus.ACTIVE]
-                      .color
-                  }
-                >
-                  {
-                    IRoleStatusDict[_roleDetails?.status || IRoleStatus.ACTIVE]
-                      .label
-                  }
-                </Badge>
-              )}
-            </Col>
             <Col span={3}>
               {_isEditing ? (
                 <Checkbox

@@ -1,6 +1,4 @@
-import { useAppDispatch } from '@/hooks/redux';
 import usePagination from '@/hooks/use-pagination';
-import { TimeoffActions } from '@/redux/reducers/timeoff/timeoff.action';
 import { IBalance, IBalanceEventDict } from '@/types/models/IBalance';
 import {
   IRequest,
@@ -25,45 +23,21 @@ import {
 } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { DataTable, DataTableColumn } from 'mantine-datatable';
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useLayoutEffect,
-  useRef,
-  useState
-} from 'react';
+import { useEffect, useState } from 'react';
 
 export interface ComponentRef {
   triggerFunction: () => void;
 }
 
-export const BalanceHistory = forwardRef<ComponentRef>(() => {
-  const dispatch = useAppDispatch();
-  const [_balanceHistory, setBalanceHistory] = useState<IBalance[]>();
+interface Props {
+  _balanceHistory: IBalance[] | undefined;
+  _remainTimeoffDays?: IRequest[];
+}
 
-  const getBalanceHistory = useCallback(() => {
-    console.log('ádasd');
-    dispatch(
-      TimeoffActions.getBalanceHistory({
-        onSuccess: (data: IBalance[]) => {
-          setBalanceHistory(data);
-        }
-      })
-    );
-  }, [dispatch]);
-
-  const triggerRef = useRef(() => getBalanceHistory());
-  useImperativeHandle(undefined, () => ({
-    triggerFunction: triggerRef
-  }));
-
-  useEffect(() => {
-    console.log('ád');
-    getBalanceHistory();
-  }, [getBalanceHistory]);
-
+export const BalanceHistory = ({
+  _balanceHistory,
+  _remainTimeoffDays
+}: Props) => {
   const [_filteredBalanceHistory, setFilteredBalanceHistory] = useState<
     IBalance[]
   >([]);
@@ -91,22 +65,6 @@ export const BalanceHistory = forwardRef<ComponentRef>(() => {
     });
     setFilteredBalanceHistory(filteredData);
   }, [_balanceHistory, startDate, endDate, requestType]);
-
-  const [_remainTimeoffDays, setRemainTimeoffDays] = useState<IRequest[]>();
-
-  const getRemainTimeoffDays = useCallback(() => {
-    dispatch(
-      TimeoffActions.getMyTimeoff({
-        onSuccess: (data: IRequest[]) => {
-          setRemainTimeoffDays(data);
-        }
-      })
-    );
-  }, [dispatch]);
-
-  useLayoutEffect(() => {
-    getRemainTimeoffDays();
-  }, [getRemainTimeoffDays]);
 
   const columns: DataTableColumn<IBalance>[] = [
     {
@@ -197,6 +155,7 @@ export const BalanceHistory = forwardRef<ComponentRef>(() => {
             value={endDate}
             onChange={setEndDate}
             rightSection={<IconCalendar size="0.9rem" color="blue" />}
+            minDate={startDate || new Date()}
           />
 
           <Select
@@ -230,4 +189,4 @@ export const BalanceHistory = forwardRef<ComponentRef>(() => {
       </Card>
     </>
   );
-});
+};

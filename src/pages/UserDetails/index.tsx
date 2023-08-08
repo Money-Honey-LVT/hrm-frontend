@@ -27,11 +27,11 @@ import {
 import { DatePickerInput } from '@mantine/dates';
 import { isNotEmpty, useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
-import { IconEdit } from '@tabler/icons-react';
+import { IconChevronLeft, IconEdit } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const UserDetails = () => {
   const { state } = useAuthContext();
@@ -160,12 +160,17 @@ export const UserDetails = () => {
     );
   };
 
+  const navigate = useNavigate();
+
   return (
     <>
       <Group position="apart" mb={'xl'}>
-        <Text fw={600} size={'lg'}>
-          Thông tin nhân sự
-        </Text>
+        <Group spacing={'xs'}>
+          <IconChevronLeft onClick={() => navigate(-1)} cursor={'pointer'} />
+          <Text fw={600} size={'lg'}>
+            Thông tin nhân sự
+          </Text>
+        </Group>
         {isGrantedPermission(_authorities, RESOURCES.USER, SCOPES.UPDATE) ? (
           <Group position="center">
             {_isEditing ? (
