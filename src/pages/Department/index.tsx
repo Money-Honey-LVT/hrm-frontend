@@ -25,6 +25,7 @@ import { DataTable, DataTableColumn } from 'mantine-datatable';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import ModalCreateDepartment from './components/ModalCreateDepartment';
+import { removeVietnameseandLowercase } from '@/utils/helpers';
 
 const Department: React.FC = () => {
   const { state } = useAuthContext();
@@ -53,12 +54,12 @@ const Department: React.FC = () => {
       departments.filter((department) => {
         if (debounceQuery !== '') {
           if (
-            department.name
-              .toLocaleLowerCase()
-              .includes(debounceQuery.toLocaleLowerCase()) ||
-            department.code
-              .toLocaleLowerCase()
-              .includes(debounceQuery.toLocaleLowerCase())
+            removeVietnameseandLowercase(department.name).includes(
+              removeVietnameseandLowercase(debounceQuery)
+            ) ||
+            removeVietnameseandLowercase(department.code).includes(
+              removeVietnameseandLowercase(debounceQuery)
+            )
           ) {
             return true;
           }
@@ -77,15 +78,6 @@ const Department: React.FC = () => {
 
   const [openedAddModal, { close: closeAddModal, open: openAddModal }] =
     useDisclosure();
-  // const [
-  //   openedUpdateModal,
-  //   { open: openUpdateModal, close: closeUpdateModal }
-  // ] = useDisclosure();
-
-  // const hanldeUpdate = (department: IDepartment) => {
-  //   setSelectedRecord(department);
-  //   openUpdateModal();
-  // };
 
   const handleDelete = (department: IDepartment) => {
     modals.openConfirmModal({
@@ -137,11 +129,6 @@ const Department: React.FC = () => {
                 }
               />
             </Tooltip>
-            {/* <IconEdit
-              cursor={'pointer'}
-              size={'1rem'}
-              onClick={() => hanldeUpdate(department)}
-            /> */}
             {isGrantedPermission(
               _authorities,
               RESOURCES.DEPARTMENT,

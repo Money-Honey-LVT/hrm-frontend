@@ -12,6 +12,7 @@ export interface INew extends BaseModel {
 }
 
 export enum INewStatus {
+  ALL = 'ALL',
   DRAFT = 'DRAFT',
   PUBLISHED = 'PUBLISHED'
 }
@@ -26,6 +27,10 @@ export const INewStatusDict: Record<
   },
   [INewStatus.PUBLISHED]: {
     label: 'Đã đăng',
+    color: 'green'
+  },
+  [INewStatus.ALL]: {
+    label: 'Tất cả',
     color: 'green'
   }
 };

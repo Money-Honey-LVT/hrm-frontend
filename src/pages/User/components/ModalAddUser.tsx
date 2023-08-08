@@ -6,6 +6,7 @@ import { DepartmentActions } from '@/redux/reducers/department/department.action
 import { RoleActions } from '@/redux/reducers/role/role.action';
 import { UserActions } from '@/redux/reducers/user/user.action';
 import { IUserGender, IUserGenderDict } from '@/types/models/IUser';
+import { validateEmail, validatePassword } from '@/utils/helpers';
 import {
   Button,
   Checkbox,
@@ -21,7 +22,7 @@ import {
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-import { isEmail, isNotEmpty, useForm } from '@mantine/form';
+import { isNotEmpty, useForm } from '@mantine/form';
 import { IconPhoto, IconUpload, IconX } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { useLayoutEffect, useState } from 'react';
@@ -67,12 +68,27 @@ export const ModalAddUser = ({ closeModal }: Props) => {
     },
     validate: {
       username: isNotEmpty('Tên đăng nhập không được bỏ trống'),
-      password: isNotEmpty('Mật khẩu không được bỏ trống'),
+      password: (value) => {
+        if (!value) {
+          return 'Mật khẩu không được để trống';
+        }
+        if (!validatePassword(value)) {
+          return 'Mật khẩu có độ dài tối thiếu 8 ký tự, chứa ít nhất 1 chữ số, 1 ký tự viết hoa và 1 ký tự đặc biệt';
+        }
+      },
       fullName: isNotEmpty('Họ tên không được bỏ trống'),
-      email: isEmail('Email không đúng định dạng'),
+      email: (value) => {
+        if (!value) {
+          return 'Email không được để trống';
+        }
+        if (!validateEmail(value)) {
+          return 'Email chưa đúng định dạng';
+        }
+      },
       phoneNumber: isNotEmpty('Số điện thoại không được bỏ trống'),
       dayOfBirth: isNotEmpty('Ngày sinh không được bỏ trống'),
-      roleIds: isNotEmpty('Chưa lựa chọn vai trò')
+      roleIds: isNotEmpty('Chưa lựa chọn vai trò'),
+      departmentId: isNotEmpty('Chưa lựa chọn phòng ban')
     },
     transformValues: (values) => ({
       ...values,
@@ -111,7 +127,6 @@ export const ModalAddUser = ({ closeModal }: Props) => {
             withAsterisk
             label="Email"
             placeholder="Nhập email"
-            type={'email'}
             {...form.getInputProps('email')}
           />
           <TextInput
@@ -127,6 +142,7 @@ export const ModalAddUser = ({ closeModal }: Props) => {
             {...form.getInputProps('phoneNumber')}
           />
           <DatePickerInput
+            required
             label="Ngày sinh"
             placeholder="Nhập ngày sinh"
             {...form.getInputProps('dayOfBirth')}
@@ -152,6 +168,7 @@ export const ModalAddUser = ({ closeModal }: Props) => {
               value: id,
               label: name
             }))}
+            required
             label="Vai trò"
             placeholder="Chọn vai trò"
             {...form.getInputProps('roleIds')}
@@ -163,6 +180,7 @@ export const ModalAddUser = ({ closeModal }: Props) => {
               label: name
             }))}
             label="Phòng ban"
+            required
             placeholder="Chọn phòng ban"
             {...form.getInputProps('departmentId')}
           />

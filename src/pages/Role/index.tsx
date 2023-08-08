@@ -5,10 +5,10 @@ import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import usePagination from '@/hooks/use-pagination';
 import { RootState } from '@/redux/reducers';
 import { RoleActions } from '@/redux/reducers/role/role.action';
-import { IRole, IRoleStatus, IRoleStatusDict } from '@/types/models/IRole';
+import { IRole, IRoleStatus } from '@/types/models/IRole';
+import { removeVietnameseandLowercase } from '@/utils/helpers';
 import { RESOURCES, SCOPES, isGrantedPermission } from '@/utils/permissions';
 import {
-  Badge,
   Button,
   Group,
   Input,
@@ -22,7 +22,6 @@ import { modals } from '@mantine/modals';
 import {
   IconBrandPowershell,
   IconInfoCircle,
-  IconStatusChange,
   IconTrash
 } from '@tabler/icons-react';
 import { DataTable, DataTableColumn } from 'mantine-datatable';
@@ -69,12 +68,12 @@ export const Role = () => {
       roles.filter((role) => {
         if (debounceQuery !== '') {
           if (
-            role.name
-              .toLocaleLowerCase()
-              .includes(debounceQuery.toLocaleLowerCase()) ||
-            role.code
-              .toLocaleLowerCase()
-              .includes(debounceQuery.toLocaleLowerCase())
+            removeVietnameseandLowercase(role.name).includes(
+              removeVietnameseandLowercase(debounceQuery)
+            ) ||
+            removeVietnameseandLowercase(role.code).includes(
+              removeVietnameseandLowercase(debounceQuery)
+            )
           ) {
             return true;
           }
@@ -113,14 +112,14 @@ export const Role = () => {
     });
   };
 
-  const handleToggleStatus = (id: string | undefined) => {
-    if (!id) return;
-    dispatch(
-      RoleActions.toggleStatus(id, {
-        onSuccess: () => dispatch(RoleActions.getAllRole())
-      })
-    );
-  };
+  // const handleToggleStatus = (id: string | undefined) => {
+  //   if (!id) return;
+  //   dispatch(
+  //     RoleActions.toggleStatus(id, {
+  //       onSuccess: () => dispatch(RoleActions.getAllRole())
+  //     })
+  //   );
+  // };
 
   // const handleUpdate = (role: IRole) => {
   //   setSelectedRecord(role);
@@ -136,17 +135,17 @@ export const Role = () => {
     { accessor: 'code', title: 'Mã' },
     { accessor: 'name', title: 'Tên' },
     { accessor: 'description', title: 'Mô tả' },
-    {
-      accessor: 'status',
-      title: 'Trạng thái',
-      render: ({ status }) => {
-        return (
-          <Badge color={IRoleStatusDict[status].color}>
-            {IRoleStatusDict[status].label}
-          </Badge>
-        );
-      }
-    },
+    // {
+    //   accessor: 'status',
+    //   title: 'Trạng thái',
+    //   render: ({ status }) => {
+    //     return (
+    //       <Badge color={IRoleStatusDict[status].color}>
+    //         {IRoleStatusDict[status].label}
+    //       </Badge>
+    //     );
+    //   }
+    // },
     {
       accessor: '',
       title: '',
@@ -160,7 +159,7 @@ export const Role = () => {
                 onClick={() => navigate(`${ROUTER.ROLE}/${role.id}`)}
               />
             </Tooltip>
-            {isGrantedPermission(
+            {/* {isGrantedPermission(
               _authorities,
               RESOURCES.ROLE,
               SCOPES.UPDATE
@@ -172,7 +171,7 @@ export const Role = () => {
                   onClick={() => handleToggleStatus(role.id)}
                 />
               </Tooltip>
-            )}
+            )} */}
             {role.status === IRoleStatus.ACTIVE ? (
               <Group>
                 {isGrantedPermission(

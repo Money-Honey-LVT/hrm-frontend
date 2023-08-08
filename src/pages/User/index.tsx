@@ -25,6 +25,7 @@ import { DataTable, DataTableColumn } from 'mantine-datatable';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { ModalAddUser } from './components/ModalAddUser';
+import { removeVietnameseandLowercase } from '@/utils/helpers';
 
 export const User = () => {
   const { state } = useAuthContext();
@@ -54,12 +55,12 @@ export const User = () => {
         users.filter((user) => {
           if (debounceQuery !== '') {
             if (
-              user.fullName
-                .toLowerCase()
-                .includes(debounceQuery.toLowerCase()) ||
-              user.employeeCode
-                .toLowerCase()
-                .includes(debounceQuery.toLowerCase())
+              removeVietnameseandLowercase(user.fullName).includes(
+                removeVietnameseandLowercase(debounceQuery)
+              ) ||
+              removeVietnameseandLowercase(user.employeeCode).includes(
+                removeVietnameseandLowercase(debounceQuery)
+              )
             ) {
               return true;
             }

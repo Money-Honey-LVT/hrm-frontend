@@ -25,6 +25,7 @@ import {
 import { isNotEmpty, useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import {
+  IconChevronLeft,
   IconEdit,
   IconInfoCircle,
   IconLayoutGridRemove,
@@ -104,7 +105,9 @@ export const DepartmentDetails = () => {
   }, [_department]);
 
   const handleCancel = () => {
-    // form.reset();
+    if (_department) {
+      form.setValues(_department);
+    }
     setIsEditing(false);
   };
 
@@ -125,6 +128,7 @@ export const DepartmentDetails = () => {
 
   const handleSubmit = (values: UpdateDepartmentPayload) => {
     if (!_isEditing) {
+      console.log('Editing');
       setIsEditing(true);
     } else {
       if (isDirtyForm()) {
@@ -139,6 +143,10 @@ export const DepartmentDetails = () => {
                   }
                 })
               );
+            },
+            onError: () => {
+              handleCancel();
+              setIsEditing(false);
             }
           })
         );
@@ -229,9 +237,12 @@ export const DepartmentDetails = () => {
   return (
     <Stack>
       <Group position="apart">
-        <Text fw={600} size={'lg'}>
-          Thông tin phòng ban
-        </Text>
+        <Group spacing={'xs'}>
+          <IconChevronLeft onClick={() => navigate(-1)} cursor={'pointer'} />
+          <Text fw={600} size={'lg'}>
+            Thông tin phòng ban
+          </Text>
+        </Group>
         {isGrantedUpdatePermission && (
           <Group>
             {_isEditing ? (
@@ -254,7 +265,10 @@ export const DepartmentDetails = () => {
       ) : (
         <form
           id={`update-department-form-${_department?.id}`}
-          onSubmit={form.onSubmit((values) => handleSubmit(values))}
+          onSubmit={form.onSubmit(
+            (values) => handleSubmit(values),
+            (err) => console.log(err)
+          )}
         >
           <Grid gutter={'md'}>
             <Grid.Col span={4}>

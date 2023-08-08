@@ -116,6 +116,7 @@ const updateRole =
         type: RoleActionType.UPDATE_ROLE_SUCCESS
       });
       cb?.onSuccess?.();
+      cb?.onError?.();
       renderNotification('Cập nhật vai trò thành công', NotiType.SUCCESS);
     } else {
       dispatch({ type: RoleActionType.ROLE_ACTION_FAILURE });

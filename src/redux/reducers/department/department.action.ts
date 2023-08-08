@@ -74,6 +74,7 @@ const updateDepartment =
         NotiType.SUCCESS
       );
       cb?.onSuccess?.();
+      cb?.onError?.();
     } else {
       dispatch({ type: DepartmentActionType.DEPARTMENT_ACTION_FAILURE });
       renderNotification(

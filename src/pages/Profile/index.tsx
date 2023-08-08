@@ -64,7 +64,9 @@ export const Profile = () => {
   const [_isEditing, setIsEditing] = useState(false);
 
   const handleCancel = () => {
-    form.reset();
+    if (profile) {
+      form.setValues(profile);
+    }
     setIsEditing(false);
   };
 
@@ -72,22 +74,50 @@ export const Profile = () => {
     updateProfile({ ...form.values, avatarFileId: url }, profile?.id, {
       onSuccess: () => {
         form.values.avatarFileId = url;
-
         getProfile();
       },
-      onError: () => form.reset()
+      onError: () => handleCancel()
     });
   };
 
+  const isDirty = () => {
+    const fieldsToCheck: (keyof ChangeProfilePayload)[] = [
+      'description',
+      'fullName',
+      'email',
+      'phoneNumber',
+      'dayOfBirth',
+      'gender'
+    ];
+    for (const field of fieldsToCheck) {
+      if (form.values[field] !== profile?.[field]) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const handleSubmit = (values: ChangeProfilePayload) => {
-    if (!form.isDirty()) {
-      renderNotification('Bạn chưa thay đổi thông tin gì', NotiType.ERROR);
+    if (!_isEditing) {
+      console.log('Editing');
+      setIsEditing(true);
     } else {
-      updateProfile(values, profile?.id, {
-        onSuccess: () => getProfile(),
-        onError: () => form.reset()
-      });
-      setIsEditing(false);
+      if (!isDirty()) {
+        renderNotification('Bạn chưa thay đổi thông tin gì', NotiType.ERROR);
+        setIsEditing(false);
+        console.log('??');
+      } else {
+        updateProfile(values, profile?.id, {
+          onSuccess: () => {
+            getProfile();
+            setIsEditing(false);
+          },
+          onError: () => {
+            handleCancel();
+            setIsEditing(false);
+          }
+        });
+      }
     }
   };
 
@@ -141,7 +171,10 @@ export const Profile = () => {
                   <Text align="left" color="dimmed">
                     Thông tin cá nhân
                   </Text>
-                  <form>
+                  <form
+                    id="form-update-profile"
+                    onSubmit={form.onSubmit((value) => handleSubmit(value))}
+                  >
                     <TextInput
                       label="Họ tên"
                       placeholder="Nhập họ tên"
@@ -222,11 +255,8 @@ export const Profile = () => {
               ) : null}
               <Button
                 leftIcon={<IconEdit size={'1rem'} />}
-                onClick={
-                  _isEditing
-                    ? () => handleSubmit(form.values)
-                    : () => setIsEditing(true)
-                }
+                form="form-update-profile"
+                type={'submit'}
               >
                 {_isEditing ? 'Lưu thông tin' : 'Sửa thông tin'}
               </Button>

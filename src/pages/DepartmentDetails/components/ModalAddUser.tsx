@@ -4,6 +4,7 @@ import { RootState } from '@/redux/reducers';
 import { DepartmentActions } from '@/redux/reducers/department/department.action';
 import { UserActions } from '@/redux/reducers/user/user.action';
 import { IUser, IUserStatus, IUserStatusDict } from '@/types/models/IUser';
+import { removeVietnameseandLowercase } from '@/utils/helpers';
 import { Badge, Button, Group, Input, Stack, Text } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { DataTable, DataTableColumn } from 'mantine-datatable';
@@ -36,8 +37,12 @@ export const ModalAdduser = ({
       users.filter((user) => {
         if (debounceValue !== '') {
           if (
-            user.employeeCode.includes(debounceValue) ||
-            user.fullName.includes(debounceValue)
+            removeVietnameseandLowercase(user.fullName).includes(
+              removeVietnameseandLowercase(debounceValue)
+            ) ||
+            removeVietnameseandLowercase(user.employeeCode).includes(
+              removeVietnameseandLowercase(debounceValue)
+            )
           ) {
             return true;
           }
