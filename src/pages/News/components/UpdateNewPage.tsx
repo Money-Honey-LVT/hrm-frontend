@@ -68,6 +68,7 @@ export const UpdateNewsPage = () => {
         NewsActions.getDetailsNew(id, {
           onSuccess: (data: INew) => {
             setNews(data);
+            console.log(data);
             form.setValues(data);
             setIsImportant(data.isImportant);
             setIsPublic(data.isPublic);
@@ -218,7 +219,11 @@ export const UpdateNewsPage = () => {
                 setIsPublic(true);
               }}
             >
-              <ModalSelectDepartment close={close} setUserIds={setUserIds} />
+              <ModalSelectDepartment
+                close={close}
+                setUserIds={setUserIds}
+                userIds={[]}
+              />
             </Modal>
           </Stack>
         </form>
