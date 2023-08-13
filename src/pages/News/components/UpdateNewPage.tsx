@@ -218,7 +218,11 @@ export const UpdateNewsPage = () => {
                 setIsPublic(true);
               }}
             >
-              <ModalSelectDepartment close={close} setUserIds={setUserIds} />
+              <ModalSelectDepartment
+                close={close}
+                setUserIds={setUserIds}
+                userIds={[]}
+              />
             </Modal>
           </Stack>
         </form>
