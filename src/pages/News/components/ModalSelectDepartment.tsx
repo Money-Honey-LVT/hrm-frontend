@@ -18,12 +18,24 @@ import { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
 interface Props {
   close: () => void;
   setUserIds: Dispatch<SetStateAction<string[]>>;
+  userIds: string[];
 }
 
-export const ModalSelectDepartment = ({ close, setUserIds }: Props) => {
+export const ModalSelectDepartment = ({
+  close,
+  setUserIds,
+  userIds
+}: Props) => {
   const dispatch = useAppDispatch();
+  const { users } = useAppSelector((state: RootState) => state.user);
+  const getSelectedUsers = () => {
+    return users.filter(({ id }) => {
+      if (userIds.includes(id)) return true;
+      else return false;
+    });
+  };
 
-  const [_users, setUsers] = useState<IUser[]>([]);
+  const [_users, setUsers] = useState<IUser[]>(() => getSelectedUsers());
 
   const handleChange = (selected: string[]) => {
     const users = selected.flatMap((id) => {
