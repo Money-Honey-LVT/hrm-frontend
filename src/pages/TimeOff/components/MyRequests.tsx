@@ -39,7 +39,6 @@ import {
   IconChevronDown,
   IconClock,
   IconDownload,
-  IconFileUpload,
   IconNewSection,
   IconNote,
   IconPaperclip,
@@ -214,7 +213,6 @@ export const MyRequests = ({ triggerBalanceHistory }: MyRequestsProps) => {
       render: (record) => {
         return (
           <Group>
-            {record.fileId ? null : <IconFileUpload size={'1rem'} />}
             {record.status === IRequestStatus.PENDING ? (
               <Tooltip label="Huỷ yêu cầu">
                 <IconUserCancel
