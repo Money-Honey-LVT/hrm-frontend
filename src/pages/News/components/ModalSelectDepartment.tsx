@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { RootState } from '@/redux/reducers';
 import { DepartmentActions } from '@/redux/reducers/department/department.action';
+import { UserActions } from '@/redux/reducers/user/user.action';
 import { IUser } from '@/types/models/IUser';
 import {
   Avatar,
@@ -13,7 +14,13 @@ import {
   Text,
   useMantineTheme
 } from '@mantine/core';
-import { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useLayoutEffect,
+  useState
+} from 'react';
 
 interface Props {
   close: () => void;
@@ -27,6 +34,10 @@ export const ModalSelectDepartment = ({
   userIds
 }: Props) => {
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(UserActions.getAllUser());
+  }, [dispatch]);
+
   const { users } = useAppSelector((state: RootState) => state.user);
   const getSelectedUsers = () => {
     return users.filter(({ id }) => {
