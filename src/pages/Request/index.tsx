@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import CustomLoader from '@/components/custom/CustomLoader';
 import { ROUTER } from '@/configs/router';
 import { useAuthContext } from '@/hooks/context';
@@ -12,22 +13,23 @@ import {
   IRequestType,
   IRequestTypeDict
 } from '@/types/models/IRequest';
+import { removeVietnameseandLowercase } from '@/utils/helpers';
 import { RESOURCES, SCOPES, isGrantedPermission } from '@/utils/permissions';
 import {
   Badge,
   Button,
   Center,
   Group,
+  Input,
   Select,
   Stack,
   Text,
   Tooltip
 } from '@mantine/core';
-import { DateInput, DateValue } from '@mantine/dates';
+import { DateValue } from '@mantine/dates';
 import { modals } from '@mantine/modals';
 import {
   IconBarrierBlock,
-  IconCalendar,
   IconChevronDown,
   IconDownload,
   IconFileLike
@@ -48,6 +50,9 @@ export const Requests = () => {
   }, [authorities]);
 
   const dispatch = useAppDispatch();
+  const d = new Date();
+  const currentMonth = d.getMonth().toString();
+
   const { allRequests } = useAppSelector((state: RootState) => state.timeoff);
   const [_allRequest, setAllRequest] = useState<IRequest[]>(allRequests);
 
@@ -59,6 +64,9 @@ export const Requests = () => {
   const [_requestStatus, setRequestStatus] = useState<IRequestStatus>(
     IRequestStatus.ALL
   );
+
+  const [_selectedMonth, setSelectedMonth] = useState<string>(currentMonth);
+  const [_query, setQuery] = useState('');
 
   const getAllRequests = useCallback(() => {
     dispatch(TimeoffActions.getAllRequest());
@@ -83,10 +91,35 @@ export const Requests = () => {
         _requestStatus === IRequestStatus.ALL ||
         request.status === _requestStatus;
 
-      return isDateInRange && isTypeMatched && isStatusMatched;
+      const isInSelectedMonth =
+        _selectedMonth === '12' ||
+        dayjs(request.dateFrom).month().toString() === _selectedMonth;
+
+      const employeeNameLowerCase = removeVietnameseandLowercase(
+        request.employeeName
+      );
+      const queryLowerCase = removeVietnameseandLowercase(_query);
+      const isIncludeNameString =
+        _query === '' || employeeNameLowerCase.includes(queryLowerCase);
+
+      return (
+        isDateInRange &&
+        isTypeMatched &&
+        isStatusMatched &&
+        isInSelectedMonth &&
+        isIncludeNameString
+      );
     });
     setAllRequest(filteredData);
-  }, [allRequests, _startDate, _endDate, _requestType, _requestStatus]);
+  }, [
+    allRequests,
+    _startDate,
+    _endDate,
+    _requestType,
+    _requestStatus,
+    _selectedMonth,
+    _query
+  ]);
 
   const handleChangeRequestStatus = (
     id: string | undefined,
@@ -263,6 +296,61 @@ export const Requests = () => {
     return <Navigate to={ROUTER.UNAUTHORIZE} />;
   }
 
+  const allMonthDataSelection = [
+    {
+      value: '12',
+      label: 'Tất cả'
+    },
+    {
+      value: '0',
+      label: 'Tháng 1'
+    },
+    {
+      value: '1',
+      label: 'Tháng 2'
+    },
+    {
+      value: '2',
+      label: 'Tháng 3'
+    },
+    {
+      value: '3',
+      label: 'Tháng 4'
+    },
+    {
+      value: '4',
+      label: 'Tháng 5'
+    },
+    {
+      value: '5',
+      label: 'Tháng 6'
+    },
+    {
+      value: '6',
+      label: 'Tháng 7'
+    },
+    {
+      value: '7',
+      label: 'Tháng 8'
+    },
+    {
+      value: '8',
+      label: 'Tháng 9'
+    },
+    {
+      value: '9',
+      label: 'Tháng 10'
+    },
+    {
+      value: '10',
+      label: 'Tháng 11'
+    },
+    {
+      value: '11',
+      label: 'Tháng 12'
+    }
+  ];
+
   return (
     <Stack spacing={'md'}>
       <Group>
@@ -271,21 +359,23 @@ export const Requests = () => {
         </Text>
       </Group>
       <Group align="end" position="left">
-        <DateInput
-          clearable
-          label="Từ"
-          rightSection={<IconCalendar size="0.9rem" color="blue" />}
-          value={_startDate}
-          onChange={setStartDate}
+        <Select
+          label="Tháng"
+          data={allMonthDataSelection}
+          value={_selectedMonth}
+          onChange={(value: string) => setSelectedMonth(value)}
         />
-        <DateInput
-          clearable
-          label="Đến"
-          rightSection={<IconCalendar size="0.9rem" color="blue" />}
-          value={_endDate}
-          onChange={setEndDate}
-          minDate={_startDate || new Date()}
-        />
+        <Stack spacing={0}>
+          <Text fz={'sm'} fw={500}>
+            Tên nhân viên
+          </Text>
+          <Input
+            w={400}
+            value={_query}
+            onChange={(e) => setQuery(e.currentTarget.value)}
+            placeholder="Nhập tên nhân viên để tìm kiếm"
+          />
+        </Stack>
         <Select
           label="Loại"
           data={TypeSelectData.map((type) => ({

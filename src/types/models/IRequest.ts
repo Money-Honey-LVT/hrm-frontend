@@ -11,6 +11,7 @@ export interface IRequest extends BaseModel {
   start?: number;
   end?: number;
   total?: number;
+  employeeName: string;
 }
 
 export enum IRequestType {

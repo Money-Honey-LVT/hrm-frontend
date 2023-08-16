@@ -5,20 +5,26 @@ import usePagination from '@/hooks/use-pagination';
 import { RootState } from '@/redux/reducers';
 import { AttendanceAction } from '@/redux/reducers/attendance/attendance.action';
 import { IAttendance } from '@/types/models/IAttendance';
-import { Button, Group, Stack, Text } from '@mantine/core';
+import { removeVietnameseandLowercase } from '@/utils/helpers';
+import { Button, Group, Input, Select, Stack, Text } from '@mantine/core';
 import { IconDownload } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { DataTable, DataTableColumn } from 'mantine-datatable';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 export const Attendance = () => {
   const dispatch = useAppDispatch();
+  const d = new Date();
+  const currentMonth = d.getMonth().toString();
 
   const { attendances } = useAppSelector(
     (state: RootState) => state.attendance
   );
 
   const [_attendance, setAttendance] = useState<IAttendance[]>(attendances);
+
+  const [_selectedMonth, setSelectedMonth] = useState<string>(currentMonth);
+  const [_query, setQuery] = useState('');
 
   useLayoutEffect(() => {
     dispatch(
@@ -83,6 +89,82 @@ export const Attendance = () => {
       });
   };
 
+  const allMonthDataSelection = [
+    {
+      value: '12',
+      label: 'Tất cả'
+    },
+    {
+      value: '0',
+      label: 'Tháng 1'
+    },
+    {
+      value: '1',
+      label: 'Tháng 2'
+    },
+    {
+      value: '2',
+      label: 'Tháng 3'
+    },
+    {
+      value: '3',
+      label: 'Tháng 4'
+    },
+    {
+      value: '4',
+      label: 'Tháng 5'
+    },
+    {
+      value: '5',
+      label: 'Tháng 6'
+    },
+    {
+      value: '6',
+      label: 'Tháng 7'
+    },
+    {
+      value: '7',
+      label: 'Tháng 8'
+    },
+    {
+      value: '8',
+      label: 'Tháng 9'
+    },
+    {
+      value: '9',
+      label: 'Tháng 10'
+    },
+    {
+      value: '10',
+      label: 'Tháng 11'
+    },
+    {
+      value: '11',
+      label: 'Tháng 12'
+    }
+  ];
+
+  useEffect(() => {
+    const filteredAttendance = attendances.filter((attendance: IAttendance) => {
+      // Filter by selected month
+      const isInSelectedMonth =
+        _selectedMonth === '12' ||
+        dayjs(attendance.start).month().toString() === _selectedMonth;
+
+      // Filter by employee name
+      const employeeNameLowerCase = removeVietnameseandLowercase(
+        attendance.employeeName
+      );
+      const queryLowerCase = removeVietnameseandLowercase(_query);
+      const isIncludeNameString =
+        _query === '' || employeeNameLowerCase.includes(queryLowerCase);
+      return isInSelectedMonth && isIncludeNameString;
+    });
+
+    setAttendance(filteredAttendance);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [_selectedMonth, _query]);
+
   return (
     <Stack>
       <Group position="apart">
@@ -98,6 +180,25 @@ export const Attendance = () => {
         </Button>
       </Group>
 
+      <Group>
+        <Select
+          label="Tháng"
+          data={allMonthDataSelection}
+          value={_selectedMonth}
+          onChange={(value: string) => setSelectedMonth(value)}
+        />
+        <Stack spacing={0}>
+          <Text fz={'sm'} fw={500}>
+            Tên nhân viên
+          </Text>
+          <Input
+            w={400}
+            value={_query}
+            onChange={(e) => setQuery(e.currentTarget.value)}
+            placeholder="Nhập tên nhân viên để tìm kiếm"
+          />
+        </Stack>
+      </Group>
       <DataTable
         minHeight={300}
         striped
