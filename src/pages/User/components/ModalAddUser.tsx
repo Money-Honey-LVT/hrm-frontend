@@ -2,7 +2,7 @@ import { RegisterPayload } from '@/configs/api/payload';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { useUploadFirebase } from '@/hooks/use-upload-firebase';
 import { RootState } from '@/redux/reducers';
-import { DepartmentActions } from '@/redux/reducers/department/department.action';
+import { UnitActions } from '@/redux/reducers/unit/unit.action';
 import { RoleActions } from '@/redux/reducers/role/role.action';
 import { UserActions } from '@/redux/reducers/user/user.action';
 import { IUserGender, IUserGenderDict } from '@/types/models/IUser';
@@ -36,7 +36,6 @@ export const ModalAddUser = ({ closeModal }: Props) => {
   const [previewImage, setPreviewImage] = useState<FileWithPath>();
 
   useLayoutEffect(() => {
-    dispatch(DepartmentActions.getAllDepartment());
     dispatch(RoleActions.getAllRole());
   }, [dispatch]);
 
@@ -46,9 +45,6 @@ export const ModalAddUser = ({ closeModal }: Props) => {
 
   const { roles } = useAppSelector((state: RootState) => state.role);
   console.log(roles);
-  const { departments } = useAppSelector(
-    (state: RootState) => state.department
-  );
   const [selectedGender, setSelectedGender] = useState<IUserGender>(
     IUserGender.MALE
   );
@@ -65,7 +61,6 @@ export const ModalAddUser = ({ closeModal }: Props) => {
       description: '',
       dayOfBirth: undefined,
       avatar: '',
-      departmentId: ''
     },
     validate: {
       username: isNotEmpty('Tên đăng nhập không được bỏ trống'),
@@ -158,17 +153,6 @@ export const ModalAddUser = ({ closeModal }: Props) => {
             placeholder="Chọn vai trò"
             {...form.getInputProps('roleIds')}
           />
-
-          <Select
-            data={departments.map(({ name, id }) => ({
-              value: id,
-              label: name
-            }))}
-            label="Phòng ban"
-            placeholder="Chọn phòng ban"
-            {...form.getInputProps('departmentId')}
-          />
-
           <Stack spacing={0}>
             <Text fw={600} fz="sm">
               Ảnh đại diện

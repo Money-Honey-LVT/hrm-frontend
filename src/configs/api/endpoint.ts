@@ -34,44 +34,44 @@ export const API_URLS = {
       headers: HEADERS.authHeader()
     })
   },
-  Department: {
+  Unit: {
     getAll: () => ({
-      endPoint: `/departments`,
+      endPoint: `/units`,
       method: 'GET',
       headers: HEADERS.authHeader()
     }),
     create: () => ({
-      endPoint: `/departments`,
+      endPoint: `/units`,
       method: 'POST',
       headers: HEADERS.authHeader()
     }),
     update: (id: string) => ({
-      endPoint: `/departments/${id}`,
+      endPoint: `/units/${id}`,
       method: 'POST',
       headers: HEADERS.authHeader()
     }),
     delete: (id: string) => ({
-      endPoint: `/departments/${id}/delete`,
+      endPoint: `/units/${id}/delete`,
       method: 'POST',
       headers: HEADERS.authHeader()
     }),
     getDetails: (id: string) => ({
-      endPoint: `/departments/${id}`,
+      endPoint: `/units/${id}`,
       method: 'GET',
       headers: HEADERS.authHeader()
     }),
     addUser: (id: string) => ({
-      endPoint: `/departments/${id}/add-user`,
+      endPoint: `/units/${id}/add-user`,
       method: 'POST',
       headers: HEADERS.authHeader()
     }),
     removeUser: (id: string, userId: string) => ({
-      endPoint: `/departments/${id}/delete-user/?userId=${userId}`,
+      endPoint: `/units/${id}/delete-user/?userId=${userId}`,
       method: 'POST',
       headers: HEADERS.authHeader()
     }),
     exportExcel: () => ({
-      endPoint: `/departments/export`,
+      endPoint: `/units/export`,
       method: 'GET',
       headers: HEADERS.authHeader()
     })

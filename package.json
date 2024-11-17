@@ -40,6 +40,7 @@
     "lodash": "^4.17.21",
     "mantine-datatable": "^2.5.5",
     "markdown-to-jsx": "^7.2.1",
+    "pnpm": "^9.13.2",
     "react": "^18.2.0",
     "react-avatar-edit": "^1.2.0",
     "react-awesome-calendar": "^1.0.14",

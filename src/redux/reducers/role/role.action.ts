@@ -191,13 +191,13 @@ const addUser =
     if (!error && response?.status === 200) {
       dispatch({ type: RoleActionType.ADD_USER_SUCCESS });
       renderNotification(
-        'Thêm nhân sự theo vai trò thành công',
+        'Thêm người dùng theo vai trò thành công',
         NotiType.SUCCESS
       );
       cb?.onSuccess?.();
     } else {
       dispatch({ type: RoleActionType.ROLE_ACTION_FAILURE });
-      renderNotification('Thêm nhân sự vào phòng ban thất bại', NotiType.ERROR);
+      renderNotification('Thêm người dùng vào đơn vị thất bại', NotiType.ERROR);
     }
   };
 
@@ -217,13 +217,13 @@ const removeUser =
     if (!error && response?.status === 200) {
       dispatch({ type: RoleActionType.REMOVE_USER_SUCCESS });
       renderNotification(
-        'Xoá nhân sự khỏi vai trò thành công',
+        'Xoá người dùng khỏi vai trò thành công',
         NotiType.SUCCESS
       );
       cb?.onSuccess?.();
     } else {
       dispatch({ type: RoleActionType.ROLE_ACTION_FAILURE });
-      renderNotification('Xoá nhân sự khỏi vai trò thất bại', NotiType.ERROR);
+      renderNotification('Xoá người dùng khỏi vai trò thất bại', NotiType.ERROR);
     }
   };
 export const RoleActions = {

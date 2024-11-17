@@ -23,7 +23,7 @@ const getAllUser = (): UserThunkAction => async (dispatch: AppDispatch) => {
     });
   } else {
     dispatch({ type: UserActionType.USER_ACTION_FAILURE });
-    renderNotification('Đã có lỗi khi lấy danh sách nhân sự', NotiType.ERROR);
+    renderNotification('Đã có lỗi khi lấy danh sách người dùng', NotiType.ERROR);
   }
 };
 
@@ -42,10 +42,10 @@ const createUser =
         type: UserActionType.CREATE_USER_SUCCESS
       });
       cb?.onSuccess?.();
-      renderNotification('Tạo mới nhân sự thành công', NotiType.SUCCESS);
+      renderNotification('Tạo mới người dùng thành công', NotiType.SUCCESS);
     } else {
       dispatch({ type: UserActionType.USER_ACTION_FAILURE });
-      renderNotification('Đã có lỗi khi tạo mới nhân sự', NotiType.ERROR);
+      renderNotification('Đã có lỗi khi tạo mới người dùng', NotiType.ERROR);
     }
   };
 
@@ -66,12 +66,12 @@ const updateUser =
       });
       cb?.onSuccess?.();
       renderNotification(
-        'Cập nhật thông tin nhân sự thành công',
+        'Cập nhật thông tin người dùng thành công',
         NotiType.SUCCESS
       );
     } else {
       dispatch({ type: UserActionType.USER_ACTION_FAILURE });
-      renderNotification('Cập nhật thông tin nhân sự thất bại', NotiType.ERROR);
+      renderNotification('Cập nhật thông tin người dùng thất bại', NotiType.ERROR);
     }
   };
 
@@ -92,7 +92,7 @@ const getUserById =
     } else {
       dispatch({ type: UserActionType.USER_ACTION_FAILURE });
       renderNotification(
-        'Lấy thông tin chi tiết nhân sự thất bại',
+        'Lấy thông tin chi tiết người dùng thất bại',
         NotiType.ERROR
       );
     }

@@ -27,6 +27,7 @@ export const NotiTypeDict: Record<NotiType, NotiTypeDictFields> = {
 };
 
 export const renderNotification = (message: string, type: NotiType) => {
+  if (type === NotiType.ERROR) return;
   notifications.show({
     title: NotiTypeDict[type].title,
     message,

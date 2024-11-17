@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import appIcon from '@/assets/imgs/hrm.png';
+import appIcon from '@/assets/imgs/bg.jpg';
 import CustomLoader from '@/components/custom/CustomLoader';
 import { ROUTER } from '@/configs/router';
 
@@ -185,10 +185,7 @@ const User = ({ profile }: UserProps) => {
               <Avatar radius="xl" src={profile?.avatarFileId} />
               <Box sx={{ flex: 1 }}>
                 <Text size="sm" weight={500}>
-                  {profile?.fullName}
-                </Text>
-                <Text color="dimmed" size="xs">
-                  {profile?.employeeCode}
+                  {profile?.fullName || 'Tên tài khoản'}
                 </Text>
               </Box>
             </Group>
@@ -229,15 +226,13 @@ const ProtectedLayout = () => {
     logout();
   };
 
-  if (!localStorage.getItem('token')) {
-    return <Navigate to={ROUTER.LOGIN} />;
-  }
+  // if (!localStorage.getItem('token')) {
+  //   return <Navigate to={ROUTER.LOGIN} />;
+  // }
 
   useLayoutEffect(() => {
     getAuthorities();
     getProfile();
-    dispatch(TimeoffActions.getMyRequest());
-    dispatch(NewsActions.getMyNews());
   }, [dispatch, getAuthorities, getProfile]);
 
   useEffect(() => {
@@ -248,23 +243,16 @@ const ProtectedLayout = () => {
     {
       icon: <IconBrandAsana size="1rem" />,
       color: 'grape',
-      label: 'Quản Lý Phòng Ban',
-      to: ROUTER.DEPARTMENT,
-      auth: isGrantedPermission(_authorities, RESOURCES.DEPARTMENT, SCOPES.VIEW)
+      label: 'Quản Lý Danh Mục Đơn Vị Hành Chính', 
+      to: ROUTER.UNIT,
+      auth: isGrantedPermission(_authorities, RESOURCES.UNIT, SCOPES.VIEW)
     },
     {
       icon: <IconUser size={'1rem'} />,
       color: 'blue',
-      label: 'Quản Lý Nhân Sự',
+      label: 'Quản Lý Người Dùng',
       to: ROUTER.USER,
       auth: isGrantedPermission(_authorities, RESOURCES.USER, SCOPES.VIEW)
-    },
-    {
-      icon: <IconLicense size={'1rem'} />,
-      color: 'yellow',
-      label: 'Quản Lý Vai Trò',
-      to: ROUTER.ROLE,
-      auth: isGrantedPermission(_authorities, RESOURCES.ROLE, SCOPES.VIEW)
     },
     {
       icon: <IconShield size={'1rem'} />,
@@ -274,30 +262,9 @@ const ProtectedLayout = () => {
       auth: isGrantedPermission(_authorities, RESOURCES.PERMISSION, SCOPES.VIEW)
     },
     {
-      icon: <IconGitPullRequest size={'1rem'} />,
-      color: 'green',
-      label: 'Quản Lý Xin Nghỉ Phép',
-      to: ROUTER.REQUEST,
-      auth: isGrantedPermission(_authorities, RESOURCES.TIMEOFF, SCOPES.VIEW)
-    },
-    {
-      icon: <IconGitPullRequest size={'1rem'} />,
-      color: 'pink',
-      label: 'Quản Lý Thông Báo',
-      to: ROUTER.NEWS,
-      auth: isGrantedPermission(_authorities, RESOURCES.NEWS, SCOPES.VIEW)
-    },
-    {
-      icon: <IconClockCheck size={'1rem'} />,
-      color: 'orange',
-      label: 'Quản Lý Chấm Công',
-      to: ROUTER.ATTENDANCE,
-      auth: isGrantedPermission(_authorities, RESOURCES.ATTENDANCE, SCOPES.VIEW)
-    },
-    {
       icon: <IconHistory size={'1rem'} />,
       color: 'gray',
-      label: 'Lịch sử đăng nhập',
+      label: 'Lịch Sử Truy Cập',
       to: ROUTER.SESSION,
       auth: isGrantedPermission(_authorities, RESOURCES.SESSION, SCOPES.VIEW)
     }
@@ -317,7 +284,7 @@ const ProtectedLayout = () => {
             p="md"
             hiddenBreakpoint="sm"
             hidden={true}
-            width={{ sm: 200, lg: 280 }}
+            width={{ sm: 200, lg: 350 }}
           >
             <Navbar.Section grow mt="0">
               <div>
@@ -341,7 +308,7 @@ const ProtectedLayout = () => {
                   <Image src={appIcon} height={32} width={32} />
                 </Anchor>
                 <Text fw={600} fz="lg">
-                  Hệ Thống Quản Lý Nhân Sự - HRMS
+                  Hệ Thống Quản Lý Chăn Nuôi
                 </Text>
               </Group>
               <Group>

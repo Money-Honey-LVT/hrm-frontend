@@ -157,7 +157,7 @@ export const UserDetails = () => {
     <>
       <Group position="apart" mb={'xl'}>
         <Text fw={600} size={'lg'}>
-          Thông tin nhân sự
+          Thông tin người dùng
         </Text>
         {isGrantedPermission(_authorities, RESOURCES.USER, SCOPES.UPDATE) ? (
           <Group position="center">
@@ -303,8 +303,8 @@ export const UserDetails = () => {
                       value: id,
                       label: name
                     }))}
-                    label="Phòng ban"
-                    placeholder="Chọn phòng ban"
+                    label="đơn vị"
+                    placeholder="Chọn đơn vị"
                     {...form.getInputProps('departmentId')}
                   />
                   <MultiSelect

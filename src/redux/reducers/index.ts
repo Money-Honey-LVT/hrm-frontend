@@ -1,5 +1,5 @@
 import { Reducer, combineReducers } from 'redux';
-import departmentReducer from './department/department.reducer';
+import unitReducer from './unit/unit.reducer';
 import userReducer from './user/user.reducer';
 import roleReducer from './role/role.reducer';
 import permissionReducer from './permission/permission.reducer';
@@ -9,7 +9,7 @@ import eventReducer from './event/event.reducer';
 import { atttendanceReducer } from './attendance/attendance.reducer';
 
 const rootReducer = combineReducers({
-  department: departmentReducer,
+  unit: unitReducer,
   user: userReducer,
   role: roleReducer,
   permission: permissionReducer,

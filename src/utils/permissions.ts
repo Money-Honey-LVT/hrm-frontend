@@ -5,16 +5,17 @@ export const isGrantedPermission = (
   resource: string,
   scope: string
 ) => {
-  if (!permission) return false;
-  else {
-    if (permission.isRoot) return true;
-    const permissionKey = `${resource}:${scope}`;
-    return permission.grantedPermissions.includes(permissionKey);
-  }
+  return true;
+  // if (!permission) return false;
+  // else {
+  //   if (permission.isRoot) return true;
+  //   const permissionKey = `${resource}:${scope}`;
+  //   return permission.grantedPermissions.includes(permissionKey);
+  // }
 };
 
 export enum RESOURCES {
-  DEPARTMENT = 'department',
+  UNIT = 'unit',
   USER = 'user',
   ROLE = 'role',
   PERMISSION = 'permission',

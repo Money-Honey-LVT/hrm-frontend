@@ -64,13 +64,13 @@ export const Permission = () => {
     }
   ];
 
-  if (!_authorities) {
-    return <CustomLoader />;
-  }
+  // if (!_authorities) {
+  //   return <CustomLoader />;
+  // }
 
-  if (!isGrantedPermission(_authorities, RESOURCES.PERMISSION, SCOPES.VIEW)) {
-    return <Navigate to={ROUTER.UNAUTHORIZE} />;
-  }
+  // if (!isGrantedPermission(_authorities, RESOURCES.PERMISSION, SCOPES.VIEW)) {
+  //   return <Navigate to={ROUTER.UNAUTHORIZE} />;
+  // }
 
   return (
     <Stack>

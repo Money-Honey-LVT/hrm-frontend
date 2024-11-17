@@ -16,7 +16,7 @@ export type ChangeProfilePayload = {
   dayOfBirth: string;
   avatarFileId: string;
   roleIds: string[];
-  departmentId: string;
+  unitId: string;
 };
 
 export type RegisterPayload = {
@@ -27,7 +27,6 @@ export type RegisterPayload = {
   phoneNumber: string;
   gender: IUserGender;
   roleIds: string[];
-  departmentId: string;
   description: string;
   dayOfBirth: string | undefined;
   avatar: string;
@@ -37,13 +36,12 @@ export type ChangePwdPayload = {
   password: string;
 };
 
-export type CreateDepartmentPayload = {
+export type CreateUnitPayload = {
   name: string;
-  description: string;
-  parentId?: string;
+  parentName: string;
 };
 
-export type UpdateDepartmentPayload = CreateDepartmentPayload;
+export type UpdateUnitPayload = CreateUnitPayload;
 
 export type CreateRolePayload = {
   name: string;
@@ -80,7 +78,7 @@ export type CreateNewsPayload = {
 export type ApiEndPointPayload =
   | LoginPayload
   | RegisterPayload
-  | CreateDepartmentPayload
+  | CreateUnitPayload
   | CreateRolePayload
   | AssignRolePermissionPayload
   | ChangeProfilePayload

@@ -75,7 +75,7 @@ export const User = () => {
     useDisclosure();
 
   const columns: DataTableColumn<IUser>[] = [
-    { accessor: 'employeeCode', title: 'Mã nhân sự' },
+    { accessor: 'employeeCode', title: 'Mã người dùng' },
     { accessor: 'fullName', title: 'Họ tên' },
     { accessor: 'email', title: 'Email' },
     { accessor: 'phoneNumber', title: 'Số điện thoại' },
@@ -130,39 +130,23 @@ export const User = () => {
     }
   });
 
-  if (!_authorities) {
-    return <CustomLoader />;
-  }
+  // if (!_authorities) {
+  //   return <CustomLoader />;
+  // }
 
-  if (!isGrantedPermission(_authorities, RESOURCES.USER, SCOPES.VIEW)) {
-    return <Navigate to={ROUTER.UNAUTHORIZE} />;
-  }
-
-  const handleDownloadExcel = async () => {
-    const url = API_URLS.User.download();
-    const fileName = 'Danh_sách_nhân_viên.xlsx';
-
-    await api
-      .get(url.endPoint, { ...url, responseType: 'blob' })
-      .then((res) => {
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', fileName);
-        document.body.appendChild(link);
-        link.click();
-      });
-  };
+  // if (!isGrantedPermission(_authorities, RESOURCES.USER, SCOPES.VIEW)) {
+  //   return <Navigate to={ROUTER.UNAUTHORIZE} />;
+  // }
 
   return (
     <>
       <Stack>
         <Text fw={600} size={'lg'}>
-          Danh sách nhân sự
+          Danh sách người dùng
         </Text>
         <Group position="apart">
           <Input
-            placeholder="Tìm kiếm theo tên hoặc mã nhân sư"
+            placeholder="Tìm kiếm theo tên hoặc mã"
             miw={300}
             onChange={(e) => setQuery(e.currentTarget.value)}
           />
@@ -172,15 +156,8 @@ export const User = () => {
               RESOURCES.USER,
               SCOPES.CREATE
             ) ? (
-              <Button onClick={openAddModal}>Thêm nhân sự</Button>
+              <Button onClick={openAddModal}>Thêm người dùng</Button>
             ) : null}
-            <Button
-              variant="outline"
-              leftIcon={<IconDownload />}
-              onClick={handleDownloadExcel}
-            >
-              Excel
-            </Button>
           </Group>
         </Group>
         <DataTable
@@ -201,7 +178,7 @@ export const User = () => {
 
       <Modal
         centered
-        title="Tạo mới nhân sự"
+        title="Tạo mới người dùng"
         opened={openedAddModal}
         onClose={closeAddModal}
         size={'lg'}
