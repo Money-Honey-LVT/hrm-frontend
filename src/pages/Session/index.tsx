@@ -65,7 +65,7 @@ export const Session = () => {
         withColumnBorders
         highlightOnHover
         columns={columns}
-        records={records}
+        records={[]}
         totalRecords={allSession.length}
         page={page}
         onPageChange={changePage}

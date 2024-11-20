@@ -1,6 +1,6 @@
-import { BaseModel } from '.';
 
-export interface IUnit extends BaseModel {
-  name:string;
-  parentName:string;
+export interface IUnit {
+  name: string;
+  parent_code: string;
+  code: string;
 }

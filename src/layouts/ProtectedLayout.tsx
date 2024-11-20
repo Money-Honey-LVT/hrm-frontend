@@ -254,13 +254,13 @@ const ProtectedLayout = () => {
       to: ROUTER.USER,
       auth: isGrantedPermission(_authorities, RESOURCES.USER, SCOPES.VIEW)
     },
-    {
-      icon: <IconShield size={'1rem'} />,
-      color: 'red',
-      label: 'Quản Lý Quyền',
-      to: ROUTER.PERMISSION,
-      auth: isGrantedPermission(_authorities, RESOURCES.PERMISSION, SCOPES.VIEW)
-    },
+    // {
+    //   icon: <IconShield size={'1rem'} />,
+    //   color: 'red',
+    //   label: 'Quản Lý Quyền',
+    //   to: ROUTER.PERMISSION,
+    //   auth: isGrantedPermission(_authorities, RESOURCES.PERMISSION, SCOPES.VIEW)
+    // },
     {
       icon: <IconHistory size={'1rem'} />,
       color: 'gray',

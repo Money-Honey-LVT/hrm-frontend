@@ -32,7 +32,7 @@ const router = () => {
           <Route path={ROUTER.UNIT} element={<Unit />} />
           <Route path={ROUTER.USER} element={<User />} />
           <Route path={ROUTER.USER_DETAILS} element={<UserDetails />} />
-          <Route path={ROUTER.PERMISSION} element={<Permission />} />
+          {/* <Route path={ROUTER.PERMISSION} element={<Permission />} /> */}
           <Route path={ROUTER.SESSION} element={<Session />} />
           <Route path={ROUTER.UNAUTHORIZE} element={<Page403 />} />
           <Route path="*" element={<Page404 />} />

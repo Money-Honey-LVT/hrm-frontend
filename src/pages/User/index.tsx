@@ -98,23 +98,6 @@ export const User = () => {
         );
       }
     },
-    {
-      accessor: '',
-      title: '',
-      textAlignment: 'center',
-      width: '100px',
-      render: ({ id }) => (
-        <Group position="center">
-          <Tooltip label="Xem thông tin chi tiết">
-            <IconInfoCircle
-              cursor={'pointer'}
-              size={'1rem'}
-              onClick={() => navigate(`${ROUTER.USER}/${id}`)}
-            />
-          </Tooltip>
-        </Group>
-      )
-    }
   ];
 
   const {
@@ -150,7 +133,7 @@ export const User = () => {
             miw={300}
             onChange={(e) => setQuery(e.currentTarget.value)}
           />
-          <Group>
+          {/* <Group>
             {isGrantedPermission(
               _authorities,
               RESOURCES.USER,
@@ -158,7 +141,7 @@ export const User = () => {
             ) ? (
               <Button onClick={openAddModal}>Thêm người dùng</Button>
             ) : null}
-          </Group>
+          </Group> */}
         </Group>
         <DataTable
           minHeight={200}

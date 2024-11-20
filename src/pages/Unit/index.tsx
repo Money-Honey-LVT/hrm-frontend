@@ -3,7 +3,6 @@ import { ROUTER } from '@/configs/router';
 import { useAuthContext } from '@/hooks/context';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import usePagination from '@/hooks/use-pagination';
-import { RootState } from '@/redux/reducers';
 import { UnitActions } from '@/redux/reducers/unit/unit.action';
 import { IUnit } from '@/types/models/IUnit';
 import { RESOURCES, SCOPES, isGrantedPermission } from '@/utils/permissions';
@@ -23,6 +22,7 @@ import { DataTable, DataTableColumn } from 'mantine-datatable';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import ModalUpdateUnit from './components/ModalUpdateUnit';
 import ModalCreateUnit from './components/ModalCreateUnit';
+import { getWardsDataWithDistrictName } from '@/json/helper';
 
 const Unit: React.FC = () => {
   const { state } = useAuthContext();
@@ -34,9 +34,7 @@ const Unit: React.FC = () => {
   }, [authorities]);
 
   const dispatch = useAppDispatch();
-  const { units } = useAppSelector(
-    (state: RootState) => state.unit
-  );
+  const units = getWardsDataWithDistrictName();
   const [_records, setRecords] = useState(units);
   const [_selectedRecord, setSelectedRecord] = useState<IUnit | null>(
     null
@@ -52,7 +50,7 @@ const Unit: React.FC = () => {
             unit.name
               .toLocaleLowerCase()
               .includes(debounceQuery.toLocaleLowerCase()) ||
-              unit.parentName
+              unit?.parent_name
               .toLocaleLowerCase()
               .includes(debounceQuery.toLocaleLowerCase())
           ) {
@@ -65,11 +63,6 @@ const Unit: React.FC = () => {
     );
   }, [units, debounceQuery]);
 
-  useLayoutEffect(() => {
-    dispatch(UnitActions.getAllUnit());
-  }, [dispatch]);
-
-  useEffect(() => setRecords(units), [units]);
 
   const [openedAddModal, { close: closeAddModal, open: openAddModal }] =
     useDisclosure();
@@ -103,37 +96,37 @@ const Unit: React.FC = () => {
       title: 'Tên huyện'
     },
     {
-      accessor: 'parentName',
+      accessor: 'parent_name',
       title: 'Tên xã'
     },
-    {
-      accessor: '',
-      title: '',
-      render: (department: IUnit) => {
-        return (
-          <Group position="center">
-            <IconEdit
-              cursor={'pointer'}
-              size={'1rem'}
-              onClick={() => {}}
-            />
-            {isGrantedPermission(
-              _authorities,
-              RESOURCES.UNIT,
-              SCOPES.DELETE
-            ) ? (
-              <Tooltip label="Xoá đơn vị">
-                <IconTrash
-                  cursor={'pointer'}
-                  size={'1rem'}
-                  onClick={() => handleDelete(department)}
-                />
-              </Tooltip>
-            ) : null}
-          </Group>
-        );
-      }
-    }
+    // {
+    //   accessor: '',
+    //   title: '',
+    //   render: (department: IUnit) => {
+    //     return (
+    //       <Group position="center">
+    //         <IconEdit
+    //           cursor={'pointer'}
+    //           size={'1rem'}
+    //           onClick={() => {}}
+    //         />
+    //         {isGrantedPermission(
+    //           _authorities,
+    //           RESOURCES.UNIT,
+    //           SCOPES.DELETE
+    //         ) ? (
+    //           <Tooltip label="Xoá đơn vị">
+    //             <IconTrash
+    //               cursor={'pointer'}
+    //               size={'1rem'}
+    //               onClick={() => handleDelete(department)}
+    //             />
+    //           </Tooltip>
+    //         ) : null}
+    //       </Group>
+    //     );
+    //   }
+    // }
   ];
 
   const {
@@ -168,17 +161,6 @@ const Unit: React.FC = () => {
           miw={300}
           onChange={(e) => setQuery(e.currentTarget.value)}
         />
-        <Group>
-          {isGrantedPermission(
-            _authorities,
-            RESOURCES.UNIT,
-            SCOPES.CREATE
-          ) && (
-            <Button onClick={openAddModal} hidden>
-              Thêm mới
-            </Button>
-          )}
-        </Group>
       </Group>
       <DataTable
         minHeight={200}
